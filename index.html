@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retirement Monte Carlo - BILL ETF Strategy</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+</head>
+<body>
+
+    <h1>Retirement Monte Carlo Simulation</h1>
+    <p class="subtitle">Operating Manual: Balanced VAS/VGS/VAF Portfolio & BILL ETF Buffer.</p>
+
+    <div class="controls-grid">
+        <div class="ctrl-card">
+            <div class="section-label">Portfolio & BILL ETF Buffer</div>
+            <div class="ctrl-label">Total Starting Assets ($)</div>
+            <div class="ctrl-row">
+                <input type="range" min="1000000" max="5000000" step="50000" value="2640000" id="sl-port">
+                <span class="ctrl-val" id="vl-port">$2.64M</span>
+            </div>
+            <div class="ctrl-label">Initial BILL Buffer (Years of Spend)</div>
+            <div class="ctrl-row">
+                <input type="range" min="0" max="5" step="0.5" value="3" id="sl-buf-start">
+                <span class="ctrl-val" id="vl-buf-start">3.0</span>
+            </div>
+            <div class="ctrl-label">Target End Buffer (Years of Spend)</div>
+            <div class="ctrl-row">
+                <input type="range" min="0" max="5" step="0.5" value="1" id="sl-buf-end">
+                <span class="ctrl-val" id="vl-buf-end">1.0</span>
+            </div>
+            <div class="ctrl-label">Buffer Transition Period (Years)</div>
+            <div class="ctrl-row">
+                <input type="range" min="1" max="30" step="1" value="10" id="sl-buf-n">
+                <span class="ctrl-val" id="vl-buf-n">10y</span>
+            </div>
+        </div>
+
+        <div class="ctrl-card">
+            <div class="section-label">Spending Guardrails</div>
+            <div class="ctrl-label">Target Annual Spend ($)</div>
+            <div class="ctrl-row">
+                <input type="range" min="40000" max="150000" step="5000" value="80000" id="sl-spend">
+                <span class="ctrl-val" id="vl-spend">$80k</span>
+            </div>
+            <div class="ctrl-label">Spending Floor / Ceiling ($)</div>
+            <div class="ctrl-row">
+                <input type="range" min="40000" max="100000" step="5000" value="70000" id="sl-floor">
+                <span class="ctrl-val" id="vl-floor">$70k</span>
+                <input type="range" min="80000" max="200000" step="5000" value="100000" id="sl-ceil">
+                <span class="ctrl-val" id="vl-ceil">$100k</span>
+            </div>
+            <div class="ctrl-label">Avg. Inflation (CPI %)</div>
+            <div class="ctrl-row">
+                <input type="range" min="1.0" max="5.0" step="0.1" value="2.8" id="sl-cpi">
+                <span class="ctrl-val" id="vl-cpi">2.8%</span>
+            </div>
+        </div>
+
+        <div class="ctrl-card">
+            <div class="section-label">Investment Mix (Must = 100%)</div>
+            <div class="ctrl-row">
+                <span>VAS (Aus)</span>
+                <input type="range" min="0" max="100" step="1" value="30" class="alloc-sl" id="sl-vas">
+                <span class="ctrl-val" id="vl-vas">30%</span>
+            </div>
+            <div class="ctrl-row">
+                <span>VGS (Intl)</span>
+                <input type="range" min="0" max="100" step="1" value="40" class="alloc-sl" id="sl-vgs">
+                <span class="ctrl-val" id="vl-vgs">40%</span>
+            </div>
+            <div class="ctrl-row">
+                <span>VAF (Bonds)</span>
+                <input type="range" min="0" max="100" step="1" value="30" class="alloc-sl" id="sl-vaf">
+                <span class="ctrl-val" id="vl-vaf">30%</span>
+            </div>
+            <div class="ctrl-label" style="text-align:center; font-weight:bold; margin-top:10px">
+                Total Allocation: <span id="vl-total">100%</span>
+            </div>
+
+            <div class="section-label" style="margin-top:20px">Sequence of Returns Risk</div>
+            <div class="ctrl-row">
+                <input type="checkbox" id="tg-sor"> <label for="tg-sor">Simulate Crash (-15%)</label>
+            </div>
+            <div class="ctrl-row">
+                <input type="range" min="1" max="20" step="1" value="1" id="sl-sor-start">
+                <span class="ctrl-val" id="vl-sor-start">Yr 1</span>
+                <input type="range" min="1" max="5" step="1" value="2" id="sl-sor-dur">
+                <span class="ctrl-val" id="vl-sor-dur">2y</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-layout">
+        <div class="chart-box"><canvas id="c-fan"></canvas></div>
+        <div id="scenarios"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
