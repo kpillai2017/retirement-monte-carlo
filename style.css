@@ -1,16 +1,95 @@
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, sans-serif; background: #f5f4ef; color: #1a1a18; padding: 1.5rem; }
+/* 1. RESET & EMBED FIXES */
+*, *::before, *::after { 
+  box-sizing: border-box; 
+  margin: 0; 
+  padding: 0; 
+}
+
+html, body {
+  /* Google Sites adds its own padding; we set ours to 0 to prevent double-spacing */
+  margin: 0;
+  padding: 0;
+  /* This prevents the horizontal scrollbar if the content is 1px too wide */
+  overflow-x: hidden; 
+  background: #f5f4ef; 
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #1a1a18;
+}
+
+/* 2. LAYOUT WRAPPER */
+/* We wrap everything in a container with a bit of internal padding */
+body {
+  padding: 1rem; 
+  /* Ensures the app can shrink for mobile but doesn't look stretched on ultra-wide screens */
+  max-width: 100%;
+}
+
+/* 3. TYPOGRAPHY */
 h1 { font-size: 1.25rem; font-weight: 700; margin-bottom: 4px; }
 .subtitle { font-size: 0.85rem; color: #73726c; margin-bottom: 1.5rem; }
-.controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; margin-bottom: 20px; }
-.ctrl-card { background: #eae9e3; border-radius: 12px; padding: 1.25rem; border: 1px solid #dcdbd5; }
-.section-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: #b4b2a9; margin-bottom: 12px; border-bottom: 1px solid #dcdbd5; padding-bottom: 4px; }
+
+/* 4. THE GRID (Responsive) */
+.controls-grid { 
+  display: grid; 
+  /* auto-fit makes cards wrap to a new line on phones automatically */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+  gap: 15px; 
+  margin-bottom: 20px; 
+}
+
+.ctrl-card { 
+  background: #eae9e3; 
+  border-radius: 12px; 
+  padding: 1.25rem; 
+  border: 1px solid #dcdbd5; 
+}
+
+/* 5. LABELS & INPUTS */
+.section-label { 
+  font-size: 0.7rem; 
+  font-weight: 800; 
+  text-transform: uppercase; 
+  color: #b4b2a9; 
+  margin-bottom: 12px; 
+  border-bottom: 1px solid #dcdbd5; 
+  padding-bottom: 4px; 
+}
 .ctrl-label { font-size: 0.75rem; color: #73726c; margin-top: 10px; margin-bottom: 4px; }
 .ctrl-row { display: flex; align-items: center; gap: 12px; font-size: 0.85rem; margin-bottom: 6px; }
 .ctrl-val { font-weight: 700; min-width: 55px; text-align: right; color: #378ADD; }
 input[type=range] { flex: 1; cursor: pointer; }
-.main-layout { display: grid; grid-template-columns: 3fr 1fr; gap: 20px; }
-.chart-box { background: #fff; border-radius: 12px; padding: 1.5rem; border: 1px solid #ddd; height: 450px; }
-.sc-card { background: #fff; border: 1px solid #ddd; border-radius: 12px; padding: 1.25rem; }
+
+/* 6. MAIN CONTENT AREA (The 'Side-by-Side' Fix) */
+.main-layout { 
+  display: grid; 
+  /* On wide screens, 3fr 1fr looks great. On phones, we need them to stack. */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+  gap: 20px; 
+}
+
+.chart-box { 
+  background: #fff; 
+  border-radius: 12px; 
+  padding: 1.5rem; 
+  border: 1px solid #ddd; 
+  /* Using min-height instead of fixed height helps with responsiveness */
+  min-height: 400px; 
+  height: auto;
+}
+
+.sc-card { 
+  background: #fff; 
+  border: 1px solid #ddd; 
+  border-radius: 12px; 
+  padding: 1.25rem; 
+}
+
 .sc-title { font-weight: 700; border-bottom: 1px solid #eee; margin-bottom: 10px; padding-bottom: 5px; }
 .sc-row { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 8px; }
+
+/* 7. MOBILE ADJUSTMENTS */
+@media (max-width: 600px) {
+  body { padding: 0.5rem; }
+  h1 { font-size: 1.1rem; }
+  .chart-box { min-height: 300px; }
+}
