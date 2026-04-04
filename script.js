@@ -97,8 +97,29 @@ function runSim(portTotal, bStart, bEnd, bN, spendStart, vasP, vgsP, vafP, floor
 }
 
 function update(e) {
+    // 1. Dynamic Guardrail: Ceiling min must be Floor value
+    const floorEl = document.getElementById('sl-floor');
+    const ceilEl = document.getElementById('sl-ceil');
+    
+    ceilEl.min = floorEl.value; 
+    if (parseFloat(ceilEl.value) < parseFloat(floorEl.value)) {
+        ceilEl.value = floorEl.value;
+    }
     if (e && e.target.classList.contains('alloc-sl')) {
         balanceAllocations(e.target.id);
+    }
+
+    // Toggle SOR Sliders
+    const sorEnabled = document.getElementById('tg-sor').checked;
+    const sorContainer = document.getElementById('sor-controls');
+    const sorInputs = sorContainer.querySelectorAll('input');
+
+    if (sorEnabled) {
+        sorContainer.classList.remove('disabled-ctrl');
+        sorInputs.forEach(i => i.disabled = false);
+    } else {
+        sorContainer.classList.add('disabled-ctrl');
+        sorInputs.forEach(i => i.disabled = true);
     }
 
     const port = parseFloat(document.getElementById('sl-port').value);
@@ -174,7 +195,7 @@ function renderCharts(results, ruinRate) {
     document.getElementById('scenarios').innerHTML = `
         <div class="sc-card">
             <div class="sc-title">Real Outcomes</div>
-            <div class="sc-row"><span>Ruin Risk</span><span style="color:${ruinRate > 5 ? '#E24B4A':'#1D9E75'}; font-weight:bold">${ruinRate.toFixed(1)}%</span></div>
+            <div class="sc-row"><span>Risk of Ruin</span><span style="color:${ruinRate > 5 ? '#E24B4A':'#1D9E75'}; font-weight:bold">${ruinRate.toFixed(1)}%</span></div>
             <div class="sc-row"><span>Median End Value</span><span>$${(p50[29]/1e6).toFixed(2)}M</span></div>
         </div>
     `;
