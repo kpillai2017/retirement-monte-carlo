@@ -83,3 +83,9 @@ input[type=range] { flex: 1; cursor: pointer; }
       height: 400px;
   }
 }
+
+.disabled-ctrl {
+    opacity: 0.4;
+    pointer-events: none; /* Prevents interaction even if disabled attr fails */
+    filter: grayscale(1);
+}
