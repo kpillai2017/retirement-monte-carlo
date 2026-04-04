@@ -9,7 +9,6 @@ const CPI_SD=0.015, CORR_EQ_BOND = 0.05;
 
 let fanChart;
 
-// 100% Allocation Rebalancing Logic for VAS/VGS/VAF
 function balanceAllocations(changedId) {
     const ids = ['sl-vas', 'sl-vgs', 'sl-vaf'];
     const otherIds = ids.filter(id => id !== changedId);
@@ -54,7 +53,6 @@ function runSim(portTotal, bStart, bEnd, bN, spendStart, vasP, vgsP, vafP, floor
             const cpi = Math.max(0, cpiMean + CPI_SD * randn());
             cumulativeCPI *= (1 + cpi);
             
-            // Calculate declining buffer target over time
             let targetBufferYears = (y < bN) ? (bStart + (y * (bEnd - bStart) / bN)) : bEnd;
             const inSORR = forceSOR && (y >= (sStart - 1)) && (y < (sStart - 1 + sDur));
 
@@ -63,12 +61,10 @@ function runSim(portTotal, bStart, bEnd, bN, spendStart, vasP, vgsP, vafP, floor
             let bRet = VAF_MU + VAF_SD*zB;
             let billRet = BILL_MU + BILL_SD*z3;
 
-            // Grow Portfolio & Apply distributions/franking
             invPortfolio += invPortfolio * ( (vasP*vRet) + (vgsP*gRet) + (vafP*bRet) );
             invPortfolio += invPortfolio * ( (vasP*VAS_YIELD*(1+FRANKING)) + (vgsP*VGS_YIELD) );
             billBuffer *= (1 + billRet);
 
-            // Guardrail Logic based on market performance
             let annualDraw = currentSpend * cumulativeCPI;
             if (vRet < 0 || gRet < 0) {
                 currentSpend = Math.max(floorLimit, currentSpend * 0.95);
@@ -76,7 +72,6 @@ function runSim(portTotal, bStart, bEnd, bN, spendStart, vasP, vgsP, vafP, floor
                 currentSpend = Math.min(ceilLimit, currentSpend * 1.05);
             }
 
-            // Draw from BILL ETF buffer first
             if (billBuffer >= annualDraw) {
                 billBuffer -= annualDraw;
             } else {
@@ -84,7 +79,6 @@ function runSim(portTotal, bStart, bEnd, bN, spendStart, vasP, vgsP, vafP, floor
                 billBuffer = 0;
             }
 
-            // Refill Buffer from Portfolio only if markets are up and not in SORR
             let targetAmt = annualDraw * targetBufferYears;
             if (billBuffer < targetAmt && !inSORR && (vRet > 0)) {
                 let refill = Math.min(invPortfolio * 0.1, targetAmt - billBuffer);
@@ -94,7 +88,7 @@ function runSim(portTotal, bStart, bEnd, bN, spendStart, vasP, vgsP, vafP, floor
 
             let total = invPortfolio + billBuffer;
             if (total <= 0) { ruined = true; total = 0; }
-            realPath.push(total / cumulativeCPI); // Store value in today's dollars
+            realPath.push(total / cumulativeCPI); 
         }
         if(ruined) ruinCount++;
         results.push(realPath);
@@ -122,7 +116,6 @@ function update(e) {
     const sDur = parseInt(document.getElementById('sl-sor-dur').value);
     const cpi = parseFloat(document.getElementById('sl-cpi').value)/100;
 
-    // Update UI Text
     document.getElementById('vl-port').innerText = `$${(port/1e6).toFixed(2)}M`;
     document.getElementById('vl-buf-start').innerText = bStart.toFixed(1);
     document.getElementById('vl-buf-end').innerText = bEnd.toFixed(1);
@@ -164,8 +157,17 @@ function renderCharts(results, ruinRate) {
             ]
         },
         options: { 
-            responsive: true, maintainAspectRatio: false,
-            scales: { y: { ticks: { callback: v => '$'+(v/1e6).toFixed(1)+'M' } } }
+            responsive: true, 
+            maintainAspectRatio: false, // CRITICAL FIX: Allows chart to fill container height
+            scales: { 
+                y: { 
+                    beginAtZero: true,
+                    ticks: { callback: v => '$'+(v/1e6).toFixed(1)+'M' } 
+                } 
+            },
+            plugins: {
+                legend: { position: 'top' }
+            }
         }
     });
 
