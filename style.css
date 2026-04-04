@@ -1,4 +1,3 @@
-/* 1. RESET & EMBED FIXES */
 *, *::before, *::after { 
   box-sizing: border-box; 
   margin: 0; 
@@ -6,30 +5,18 @@
 }
 
 html, body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden; 
-  /* Match Soho Light background or use #ffffff for a seamless look */
   background: #ffffff; 
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: #1a1a18;
+  padding: 20px;
 }
 
-/* 2. LAYOUT WRAPPER */
-body {
-  padding: 10px; /* Minimal padding for the embed edges */
-  max-width: 100%;
-}
-
-/* 3. TYPOGRAPHY */
 h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; color: #222; }
 .subtitle { font-size: 0.9rem; color: #73726c; margin-bottom: 1.5rem; }
 
-/* 4. THE GRID (Controls) */
 .controls-grid { 
   display: grid; 
-  /* Fits as many 250px columns as possible */
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
   gap: 15px; 
   margin-bottom: 25px; 
 }
@@ -41,7 +28,6 @@ h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; color: #222; }
   border: 1px solid #e9ecef; 
 }
 
-/* 5. LABELS & INPUTS */
 .section-label { 
   font-size: 0.75rem; 
   font-weight: 800; 
@@ -56,22 +42,27 @@ h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; color: #222; }
 .ctrl-val { font-weight: 700; min-width: 65px; text-align: right; color: #007BFF; }
 input[type=range] { flex: 1; cursor: pointer; }
 
-/* 6. MAIN CONTENT AREA (The 'Side-by-Side' Layout) */
 .main-layout { 
   display: grid; 
-  /* Force the 2/3 and 1/3 split on desktop */
-  grid-template-columns: 2fr 1fr; 
+  grid-template-columns: 3fr 1fr; 
   gap: 20px; 
   align-items: start;
 }
 
+/* FIX: Explicit height and relative positioning for Chart.js */
 .chart-box { 
+  position: relative;
   background: #fff; 
   border-radius: 12px; 
   padding: 1.5rem; 
   border: 1px solid #dee2e6; 
-  min-height: 450px; 
-  height: auto;
+  height: 550px; /* Adjust this value to your preferred chart height */
+}
+
+/* Ensure canvas takes up full container space */
+.chart-box canvas {
+    width: 100% !important;
+    height: 100% !important;
 }
 
 .sc-card { 
@@ -84,16 +75,11 @@ input[type=range] { flex: 1; cursor: pointer; }
 .sc-title { font-weight: 700; border-bottom: 1px solid #eee; margin-bottom: 12px; padding-bottom: 8px; }
 .sc-row { display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 10px; }
 
-/* 7. RESPONSIVE ADJUSTMENTS */
-@media (max-width: 900px) {
-  /* Stacks the chart and cards when the screen gets too narrow for side-by-side */
+@media (max-width: 1000px) {
   .main-layout { 
     grid-template-columns: 1fr; 
   }
-}
-
-@media (max-width: 600px) {
-  body { padding: 5px; }
-  h1 { font-size: 1.25rem; }
-  .chart-box { min-height: 300px; padding: 10px; }
+  .chart-box {
+      height: 400px;
+  }
 }
