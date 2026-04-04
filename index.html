@@ -1,13 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retirement Monte Carlo - BILL ETF Strategy</title>
-    <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-</head>
-<body>
 
     <h1>Retirement Monte Carlo Simulation</h1>
     <p class="subtitle">Operating Manual: Balanced VAS/VGS/VAF Portfolio & BILL ETF Buffer.</p>
@@ -44,13 +36,19 @@
                 <input type="range" min="40000" max="150000" step="5000" value="80000" id="sl-spend">
                 <span class="ctrl-val" id="vl-spend">$80k</span>
             </div>
-            <div class="ctrl-label">Spending Floor / Ceiling ($)</div>
+            
+            <div class="ctrl-label">Spending Floor ($)</div>
             <div class="ctrl-row">
                 <input type="range" min="40000" max="100000" step="5000" value="70000" id="sl-floor">
                 <span class="ctrl-val" id="vl-floor">$70k</span>
+            </div>
+
+            <div class="ctrl-label">Spending Ceiling ($)</div>
+            <div class="ctrl-row">
                 <input type="range" min="80000" max="200000" step="5000" value="100000" id="sl-ceil">
                 <span class="ctrl-val" id="vl-ceil">$100k</span>
             </div>
+
             <div class="ctrl-label">Avg. Inflation (CPI %)</div>
             <div class="ctrl-row">
                 <input type="range" min="1.0" max="5.0" step="0.1" value="2.8" id="sl-cpi">
@@ -83,11 +81,19 @@
             <div class="ctrl-row">
                 <input type="checkbox" id="tg-sor"> <label for="tg-sor">Simulate Crash (-15%)</label>
             </div>
-            <div class="ctrl-row">
-                <input type="range" min="1" max="20" step="1" value="1" id="sl-sor-start">
-                <span class="ctrl-val" id="vl-sor-start">Yr 1</span>
-                <input type="range" min="1" max="5" step="1" value="2" id="sl-sor-dur">
-                <span class="ctrl-val" id="vl-sor-dur">2y</span>
+            
+            <div id="sor-controls" class="disabled-ctrl">
+                <div class="ctrl-label">Crash Start Year</div>
+                <div class="ctrl-row">
+                    <input type="range" min="1" max="20" step="1" value="1" id="sl-sor-start" disabled>
+                    <span class="ctrl-val" id="vl-sor-start">Yr 1</span>
+                </div>
+
+                <div class="ctrl-label">Crash Duration</div>
+                <div class="ctrl-row">
+                    <input type="range" min="1" max="5" step="1" value="2" id="sl-sor-dur" disabled>
+                    <span class="ctrl-val" id="vl-sor-dur">2y</span>
+                </div>
             </div>
         </div>
     </div>
@@ -98,5 +104,3 @@
     </div>
 
     <script src="script.js"></script>
-</body>
-</html>
